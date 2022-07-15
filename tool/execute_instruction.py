@@ -299,7 +299,7 @@ def execute( code, stack, pos, storage, mmemory, data, trace, calldepth, debug, 
         if not is_good_jump(code, pos, debug): 
             return pos, True
 
-    elif op in ['STOP','RETURN','REVERT', 'INVALID', 'SUICIDE']:    halt = True
+    elif op in ['STOP','RETURN','REVERT', 'INVALID', 'SELFDESTRUCT']:    halt = True
 
     elif op in ['CALLDATALOAD']:
 

@@ -18,7 +18,7 @@ def ether_leak( op, stack, trace, debug ):
             if MyGlobals.s.check() == sat:
 
                 # Search condition found but keep expanding the search tree to make sure that the execution ends normally,
-                # i.e. with STOP/RETURN/SUICIDE
+                # i.e. with STOP/RETURN/SELFDESTRUCT
                 return True, False
 
         except Exception as e:
@@ -27,17 +27,17 @@ def ether_leak( op, stack, trace, debug ):
         MyGlobals.s.pop()
 
 
-    # SUICIDE leaks
-    if op == 'SUICIDE' and len(stack) >= 1 and stack[-1]['type'] == 'constant':
+    # SELFDESTRUCT leaks
+    if op == 'SELFDESTRUCT' and len(stack) >= 1 and stack[-1]['type'] == 'constant':
 
         MyGlobals.s.push()
-        MyGlobals.s.add( stack[-1]['z3'] == BitVecVal( int( get_params('my_address',''), 16), 256) )        # SUICIDE send address coincides with our address
+        MyGlobals.s.add( stack[-1]['z3'] == BitVecVal( int( get_params('my_address',''), 16), 256) )        # SELFDESTRUCT send address coincides with our address
         
         try:
             if MyGlobals.s.check() == sat:
 
-                # Once SUICIDE is executed, then no need to look for the final STOP or RETURN
-                # because SUICIDE is already a stopping instruction
+                # Once SELFDESTRUCT is executed, then no need to look for the final STOP or RETURN
+                # because SELFDESTRUCT is already a stopping instruction
                 global stop_search
                 MyGlobals.stop_search = True
                 
@@ -73,7 +73,7 @@ def run_one_check( max_call_depth, ops, contract_address, debug, read_from_block
     trace   = []
     configurations = {}
 
-    execute_one_block(ops,stack,0, trace, storage, mmemory, data, configurations,  ['CALL','SUICIDE'], ether_leak, 0, 0, debug, read_from_blockchain )
+    execute_one_block(ops,stack,0, trace, storage, mmemory, data, configurations,  ['CALL','SELFDESTRUCT'], ether_leak, 0, 0, debug, read_from_blockchain )
 
 
 
@@ -90,9 +90,9 @@ def check_one_contract_on_ether_leak(contract_bytecode, contract_address, debug 
 
 
     ops = parse_code( contract_bytecode, debug )
-    if not code_has_instruction( ops, ['CALL','SUICIDE']) :
+    if not code_has_instruction( ops, ['CALL','SELFDESTRUCT']) :
         #if debug: 
-        print('\033[92m[+] The code does not have CALL/SUICIDE, hence it is not prodigal\033[0m')
+        print('\033[92m[+] The code does not have CALL/SELFDESTRUCT, hence it is not prodigal\033[0m')
         return False
     if debug: print_code( contract_bytecode, ops )
 

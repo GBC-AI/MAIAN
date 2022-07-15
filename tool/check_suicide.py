@@ -6,7 +6,7 @@ from blockchain import *
 
 def ether_suicide( op, stack, trace, debug ):
 
-    # Once SUICIDE is executed, the contract is killed
+    # Once SELFDESTRUCT is executed, the contract is killed
     # Thus the search is stoppped and the contract is flagged as suicidal
     global stop_search
     MyGlobals.stop_search = True
@@ -33,7 +33,7 @@ def run_one_check( max_call_depth, ops, contract_address, debug, read_from_block
     trace   = []
     configurations = {}
 
-    execute_one_block(ops,stack,0, trace, storage, mmemory, data, configurations,  ['SUICIDE'], ether_suicide, 0, 0, debug, read_from_blockchain )
+    execute_one_block(ops,stack,0, trace, storage, mmemory, data, configurations,  ['SELFDESTRUCT'], ether_suicide, 0, 0, debug, read_from_blockchain )
 
 
 
@@ -50,9 +50,9 @@ def check_one_contract_on_suicide(contract_bytecode, contract_address, debug, re
 
 
     ops = parse_code( contract_bytecode, debug )
-    if not code_has_instruction( ops, ['SUICIDE']) :
+    if not code_has_instruction( ops, ['SELFDESTRUCT']) :
         #if debug: 
-        print('\n\033[92m[-] The code does not contain SUICIDE instructions, hence it is not vulnerable\033[0m')
+        print('\n\033[92m[-] The code does not contain SELFDESTRUCT instructions, hence it is not vulnerable\033[0m')
         return False
     if debug: print_code( contract_bytecode, ops )
 

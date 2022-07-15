@@ -143,7 +143,7 @@ cops = {
     "0xfc":"TXEXECGAS",
     "0xfd":"REVERT",
     "0xfe":"INVALID",
-    "0xff":"SUICIDE"
+    "0xff":"SELFDESTRUCT"
 }
 
 allops = {
@@ -292,7 +292,7 @@ allops = {
     "REVERT": [0xfd, 0, 0],
 #    "CALLSTATIC": [0xfd, 7, 1],
     "INVALID": [0xfe, 0, 0],  # 
-    "SUICIDE": [0xff, 1, 0],
+    "SELFDESTRUCT": [0xff, 1, 0],
     "STOP": [0x00, 0, 0]
 }
 

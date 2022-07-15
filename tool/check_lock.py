@@ -17,8 +17,8 @@ def ether_lock_can_send( op, stack, trace, debug ):
 
     # Once one of the instructions that can send Ether is reached, then the search can be stoppped
 
-    # If terminating instruction SUICIDE, the can stop the further search
-    if op in ['SUICIDE']:
+    # If terminating instruction SELFDESTRUCT, the can stop the further search
+    if op in ['SELFDESTRUCT']:
         global stop_search
         MyGlobals.stop_search = True
         return True, True
@@ -56,7 +56,7 @@ def run_one_check( max_call_depth, ops, contract_address, debug, read_from_block
     trace   = []
     configurations = {}
 
-    execute_one_block(ops,stack,0, trace, storage, mmemory, data, configurations,  ['CALL','CALLCODE','DELEGATECALL','SUICIDE'], ether_lock_can_send, 0, 0, debug, read_from_blockchain )
+    execute_one_block(ops,stack,0, trace, storage, mmemory, data, configurations,  ['CALL','CALLCODE','DELEGATECALL','SELFDESTRUCT'], ether_lock_can_send, 0, 0, debug, read_from_blockchain )
 
 
 
@@ -112,9 +112,9 @@ def check_one_contract_on_ether_lock(contract_bytecode, contract_address, debug 
 
 
     # If it does not have instructions that send Ether, then obviously it locks 
-    if not code_has_instruction( ops, ['CALL','CALLCODE','DELEGATECALL','SUICIDE']) :
+    if not code_has_instruction( ops, ['CALL','CALLCODE','DELEGATECALL','SELFDESTRUCT']) :
         #if debug: 
-        print('\033[91m[-] The code does not have CALL/SUICIDE/DELEGATECALL/CALLCODE thus is greedy !\033[0m')
+        print('\033[91m[-] The code does not have CALL/SELFDESTRUCT/DELEGATECALL/CALLCODE thus is greedy !\033[0m')
         return True
     if debug: print_code( contract_bytecode, ops )
 

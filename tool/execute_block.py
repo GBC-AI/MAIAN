@@ -93,7 +93,7 @@ def execute_one_block( ops , stack , pos , trace, storage, mmemory, data, config
             if debug: print('\033[94m[+] Halted on %s on line %x \033[0m' % (ops[pos]['o'],ops[pos]['id']))
             
             # If normal stop 
-            if ops[pos]['o'] in ['STOP','RETURN','SUICIDE']:
+            if ops[pos]['o'] in ['STOP','RETURN','SELFDESTRUCT']:
 
                 # If search condition still not found then call again the contract
                 # (infinite loop is prevented by calldepth )
